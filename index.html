@@ -1,1 +1,1359 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Activos K-9 - LSSD Intranet</title>
+    <!-- Fuentes modernas para un acabado institucional e imponente -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lssd-dark: #111a12;
+            --lssd-green: #1d3322;
+            --lssd-green-light: #2c4c33;
+            --lssd-gold: #c5a059;
+            --lssd-gold-light: #e2c084;
+            --bg-page: #f3f4f6;
+            --text-main: #475569;
+            --text-heading: #0f172a;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            margin: 0;
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, var(--lssd-dark) 0%, var(--lssd-green) 100%);
+            color: white;
+            overflow-y: auto;
+            padding: 30px 20px;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--lssd-gold);
+            font-size: 1.25rem;
+            margin: 0;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-header p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin: 8px 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-button {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-button:hover, .nav-button.active {
+            color: #ffffff;
+            background-color: rgba(197, 160, 89, 0.2);
+            transform: translateX(4px);
+        }
+
+        .nav-button.active {
+            border-left: 4px solid var(--lssd-gold);
+        }
+
+        /* Main Content Container */
+        .content-wrapper {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Header & Filter Controls */
+        .top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border-left: 5px solid var(--lssd-green);
+        }
+
+        .page-title h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            color: var(--text-heading);
+            margin: 0;
+            font-weight: 800;
+        }
+
+        .page-title p {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            border-color: var(--lssd-gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        /* Grid Layout */
+        .assets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* Elegant Cards with Shadow and Border Accent */
+        .asset-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            cursor: pointer; /* Indicar al usuario que es clickeable */
+        }
+
+        .asset-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            border-color: var(--lssd-gold-light);
+        }
+
+        /* Accent top border based on asset type */
+        .asset-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: var(--lssd-green);
+        }
+
+        .asset-card.uniform-card::before {
+            background: var(--lssd-gold);
+        }
+
+        .asset-card.modification-card::before {
+            background: #475569; /* Gris oscuro para partes de taller */
+        }
+
+        /* Image Frame & Fallback design */
+        .image-frame {
+            width: 100%;
+            height: 180px;
+            background-color: #f1f5f9;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Real Image Styling */
+        .asset-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .asset-card:hover .asset-img {
+            transform: scale(1.05);
+        }
+
+        /* Stylized SVG Placeholder behind image */
+        .placeholder-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(29, 51, 34, 0.05) 0%, rgba(197, 160, 89, 0.05) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            gap: 10px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .placeholder-overlay svg {
+            width: 48px;
+            height: 48px;
+            stroke: currentColor;
+            opacity: 0.4;
+        }
+
+        .placeholder-text {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Info Container */
+        .info-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .asset-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin: 0;
+        }
+
+        /* Data list (Technical specs) */
+        .spec-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spec-label {
+            color: #64748b;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            color: var(--text-heading);
+        }
+
+        /* STYLING CODES & COPY BUTTON */
+        .code-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .uniform-code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            font-weight: bold;
+        }
+
+        .copy-btn {
+            background-color: var(--lssd-gold);
+            color: var(--lssd-dark);
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--lssd-gold-light);
+            transform: scale(1.05);
+        }
+
+        /* Description for role depth */
+        .asset-desc {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin: 10px 0 0 0;
+        }
+
+        /* Tab Visibility Toggles */
+        .tab-section {
+            display: none;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        /* Empty state styling */
+        .empty-state {
+            display: none;
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        /* Estilos del Visor Modal de Ficha Ampliada */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(17, 26, 18, 0.85); /* Tono verde oscuro translúcido */
+            backdrop-filter: blur(8px); /* Desenfoque de fondo ultra moderno */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 850px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            display: grid;
+            grid-template-columns: 1fr;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid var(--lssd-gold);
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .modal-card {
+                grid-template-columns: 1.2fr 1fr;
+            }
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-image-pane {
+            background-color: #0d120e;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .modal-image-pane {
+                min-height: 450px;
+                max-height: none;
+            }
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-details {
+            padding: 35px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(17, 26, 18, 0.9);
+            border: 1px solid var(--lssd-gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--lssd-gold);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background: var(--lssd-gold);
+            color: var(--lssd-dark);
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin: 0 0 15px 0;
+            border-bottom: 2px solid var(--lssd-gold);
+            padding-bottom: 12px;
+        }
+
+        .modal-spec-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .modal-spec-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin: 0;
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--lssd-green);
+        }
+
+        /* Footer Info */
+        .footer-branding {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>LSSD K-9 ACTIVOS</h2>
+            <p>Uniformidad y Vehiculos</p>
+        </div>
+        
+        <ul class="nav-list">
+            <li>
+                <button class="nav-button active" onclick="switchTab('parque-movil', this)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                    Parque Móvil (10)
+                </button>
+            </li>
+            <li>
+                <button class="nav-button" onclick="switchTab('uniformes', this)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    Uniformidad K-9 (8)
+                </button>
+            </li>
+            <li>
+                <button class="nav-button" onclick="switchTab('modificaciones', this)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Modificaciones Vehículo (5)
+                </button>
+            </li>
+        </ul>
+
+        <div class="footer-branding">
+            LOS SANTOS SHERIFF DEPT.<br>
+            Oficina de Operaciones Especiales
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        
+        <!-- Controls & Search -->
+        <div class="top-controls">
+            <div class="page-title">
+                <h1 id="panel-title">Parque Móvil Autorizado</h1>
+                <p id="panel-subtitle">Registro técnico de vehículos policiales acondicionados para binomios K-9</p>
+            </div>
+            
+            <div class="search-box">
+                <span class="search-icon">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <input type="text" id="search-bar" class="search-input" placeholder="Buscar activo por nombre..." oninput="filterAssets()">
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE VEHÍCULOS (PARQUE MÓVIL) -->
+        <div id="parque-movil" class="tab-section active">
+            <div class="assets-grid" id="vehicles-grid">
+                
+                <!-- Vehículo 1 -->
+                <div class="asset-card" data-name="Declasse Alamo K-9">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Declasse Alamo K-9" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Declasse Alamo K-9</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">SUV 4x4 Standard</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">1 Can (Jaula Central)</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Patrulla Rural / Ciudad</span></li>
+                        </ul>
+                        <p class="asset-desc">Vehículo insignia multiusos del departamento. Su espacioso habitáculo trasero ha sido reemplazado por una jaula con sistema de climatización de doble zona.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 2 -->
+                <div class="asset-card" data-name="Vapid Scout K-9">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Vapid Scout K-9" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Vapid Scout K-9</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">SUV de Persecución</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">1 Can (Jaula Reforzada)</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Intervención Rápida</span></li>
+                        </ul>
+                        <p class="asset-desc">Excelente estabilidad a altas velocidades. Diseñado para responder velozmente a misiones donde sospechosos violentos emprendan la fuga.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 3 -->
+                <div class="asset-card" data-name="Bravado Dorado K-9">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Bravado Dorado K-9" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Bravado Dorado K-9</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">SUV Interceptor</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">1 Can (Jaula Lateral)</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Patrullaje Autovía / Tránsito</span></li>
+                        </ul>
+                        <p class="asset-desc">La Dorado K-9 destaca por su maniobrabilidad en carreteras asfaltadas y su blindaje ligero, ideal para dar soporte directo en persecuciones.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 4 -->
+                <div class="asset-card" data-name="Vapid Aleutian K-9">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Vapid Aleutian K-9" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Vapid Aleutian K-9</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">SUV Familiar Grande</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">Hasta 2 Canes</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Unidad de Rastreo Pesado</span></li>
+                        </ul>
+                        <p class="asset-desc">Su gran volumen interior permite albergar jaulas dobles para misiones que requieran el despliegue de dos unidades caninas simultáneamente.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 5 -->
+                <div class="asset-card" data-name="Vapid Sandstorm D205 Hellenbach">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Vapid Sandstorm D205 Hellenbach" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Sandstorm Hellenbach</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Pickup Off-Road</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">1 Can (Módulo Trasero)</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Rescate / Desierto</span></li>
+                        </ul>
+                        <p class="asset-desc">Preparada para los climas desérticos más duros de Blaine County. El módulo canino trasero está especialmente aislado con filtros de polvo.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 6 -->
+                <div class="asset-card" data-name="Vapid Sandstorm D205 XL">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Vapid Sandstorm D205 XL" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Sandstorm D205 XL</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Pickup XL Todo Terreno</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">Hasta 2 Canes</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Apoyo Forestal y Montaña</span></li>
+                        </ul>
+                        <p class="asset-desc">Una versión extendida y agresiva de la Sandstorm. Cuenta con tracción 4x4 pesada y suspensiones sobreelevadas para operaciones extremas.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 7 -->
+                <div class="asset-card" data-name="Bravado Bison 35 XD">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Bravado Bison 35 XD" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Bravado Bison 35 XD</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Camioneta de Carga</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">Hasta 3 Canes</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Transporte de Refuerzos</span></li>
+                        </ul>
+                        <p class="asset-desc">Vehículo logístico de carga con espacio para albergar de forma segura hasta 3 perros y el equipo completo de entrenamiento para la división.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 8 -->
+                <div class="asset-card" data-name="Declasse Granger 3700LX">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Declasse Granger 3700LX" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Granger 3700LX K-9</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">SUV de Mando</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">1 Can (Jaula Deluxe)</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Unidad de Supervisión</span></li>
+                        </ul>
+                        <p class="asset-desc">Utilizado generalmente por la dirección o subcoordinación de la unidad. Cuenta con sistemas de comunicación adicionales.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 9 -->
+                <div class="asset-card" data-name="Brute Regent XL K-9">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Brute Regent XL K-9" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Brute Regent XL K-9</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Furgón Pesado</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">Hasta 4 Canes</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Operativos Masivos</span></li>
+                        </ul>
+                        <p class="asset-desc">Unidad especial de traslado de la división K-9. Ideal para eventos públicos masivos, controles antiterroristas o búsqueda y rastreo.</p>
+                    </div>
+                </div>
+
+                <!-- Vehículo 10 -->
+                <div class="asset-card" data-name="Insurgent Blindado K-9">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Insurgent Blindado K-9" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M21 16V10a2 2 0 00-2-2h-4v8"></path></svg>
+                            <span class="placeholder-text">[Añadir URL de Imagen]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Insurgent Blindado K-9</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Blindado de Asalto</span></li>
+                            <li class="spec-item"><span class="spec-label">Capacidad Canina:</span><span class="spec-value">1 Can (Módulo Blindado)</span></li>
+                            <li class="spec-item"><span class="spec-label">Especialidad:</span><span class="spec-value">Código 0 / Alto Impacto</span></li>
+                        </ul>
+                        <p class="asset-desc">Reservado en exclusiva para situaciones de tiradores activos o zonas críticas en las que el binomio deba introducirse de manera forzosa bajo fuego.</p>
+                    </div>
+                </div>
+
+                <div class="empty-state" id="empty-vehicles">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3>Activo no encontrado</h3>
+                    <p>No hay vehículos de la división registrados con ese criterio de búsqueda.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE UNIFORMES (HOMMRE Y MUJER SEPARADOS) -->
+        <div id="uniformes" class="tab-section">
+            <div class="assets-grid" id="uniforms-grid">
+                
+                <!-- Uniforme 1: Patrullaje Regular (Hombre) -->
+                <div class="asset-card uniform-card" data-name="Patrullaje Regular K-9 (Hombre)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Patrullaje Regular K-9 (Hombre)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[Patrullaje Regular - Hombre]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Patrullaje Regular (Hombre)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Equipamiento Regular (Masculino)</span></li>
+                            <li class="spec-item"><span class="spec-label">Chaleco:</span><span class="spec-value">Táctico con Parche K-9</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Operaciones Diarias</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-REG-01-H</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-REG-01-H', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Uniforme oficial masculino de diario de la LSSD en color caqui/verde oliva con la adición de un chaleco táctico personalizado que destaca la insignia K-9 de la división.</p>
+                    </div>
+                </div>
+
+                <!-- Uniforme 1B: Patrullaje Regular (Mujer) -->
+                <div class="asset-card uniform-card" data-name="Patrullaje Regular K-9 (Mujer)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Patrullaje Regular K-9 (Mujer)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[Patrullaje Regular - Mujer]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Patrullaje Regular (Mujer)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Equipamiento Regular (Femenino)</span></li>
+                            <li class="spec-item"><span class="spec-label">Chaleco:</span><span class="spec-value">Táctico con Parche K-9</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Operaciones Diarias</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-REG-01-M</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-REG-01-M', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Uniforme oficial femenino de diario de la LSSD en color caqui/verde oliva con la adición de un chaleco táctico personalizado que destaca la insignia K-9 de la división.</p>
+                    </div>
+                </div>
+
+                <!-- Uniforme 2: Traje de Entrenamiento (Hombre) -->
+                <div class="asset-card uniform-card" data-name="Traje de Entrenamiento (Hombre)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Traje de Entrenamiento (Hombre)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[Entrenamiento - Hombre]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Traje de Entrenamiento (Hombre)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Protección Reforzada (Masculino)</span></li>
+                            <li class="spec-item"><span class="spec-label">Protección:</span><span class="spec-value">Nivel Espesado (Anti-mordida)</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Prácticas de Hatch y Lock</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-TRN-02-H</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-TRN-02-H', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Traje masculino de cuerpo completo ultra acolchado. Diseñado para que los instructores o ayudantes simulen agresiones contra mordidas de alta presión de forma segura.</p>
+                    </div>
+                </div>
+
+                <!-- Uniforme 2B: Traje de Entrenamiento (Mujer) -->
+                <div class="asset-card uniform-card" data-name="Traje de Entrenamiento (Mujer)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Traje de Entrenamiento (Mujer)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[Entrenamiento - Mujer]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Traje de Entrenamiento (Mujer)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Protección Reforzada (Femenino)</span></li>
+                            <li class="spec-item"><span class="spec-label">Protección:</span><span class="spec-value">Nivel Espesado (Anti-mordida)</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Prácticas de Hatch y Lock</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-TRN-02-M</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-TRN-02-M', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Traje femenino de cuerpo completo ultra acolchado. Diseñado para que las instructoras simulen de manera óptima las dinámicas de detención canina.</p>
+                    </div>
+                </div>
+
+                <!-- Uniforme 3: Operativos SEB / K-9 (Hombre) -->
+                <div class="asset-card uniform-card" data-name="Operativos SEB / K-9 (Hombre)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Operativos SEB / K-9 (Hombre)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[Táctico SEB - Hombre]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Operativos SEB (Hombre)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Combate Pesado (Masculino)</span></li>
+                            <li class="spec-item"><span class="spec-label">Casco:</span><span class="spec-value">Nivel III-A Balístico</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Situaciones de Alto Riesgo</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-TAC-03-H</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-TAC-03-H', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Uniforme masculino pesado de intervención, diseñado para operaciones tácticas complejas con el SEB. Incluye arnés reforzado y chaleco balístico nivel IV.</p>
+                    </div>
+                </div>
+
+                <!-- Uniforme 3B: Operativos SEB / K-9 (Mujer) -->
+                <div class="asset-card uniform-card" data-name="Operativos SEB / K-9 (Mujer)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Operativos SEB / K-9 (Mujer)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[Táctico SEB - Mujer]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Operativos SEB (Mujer)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Combate Pesado (Femenino)</span></li>
+                            <li class="spec-item"><span class="spec-label">Casco:</span><span class="spec-value">Nivel III-A Balístico</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Situaciones de Alto Riesgo</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-TAC-03-M</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-TAC-03-M', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Uniforme femenino pesado de intervención, con corte táctico ergonómico adaptado para dar un soporte de asalto rápido junto al canino.</p>
+                    </div>
+                </div>
+
+                <!-- Uniforme 4: Despliegue Especial SWT (Hombre) -->
+                <div class="asset-card uniform-card" data-name="Despliegue Especial SWT (Hombre)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Despliegue Especial SWT (Hombre)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[SWT Asalto - Hombre]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">SWT Asalto (Hombre)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Special Weapon Team (M)</span></li>
+                            <li class="spec-item"><span class="spec-label">Insignia:</span><span class="spec-value">Parche de Unidad Interna</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Despliegue en Crisis Críticas</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-SWT-04-H</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-SWT-04-H', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Conjunto masculino oficial para binomios asignados a la unidad táctica interna SWT, estandarizando de manera visual al agente K-9 durante asaltos urbanos complejos.</p>
+                    </div>
+                </div>
+
+                <!-- Uniforme 4B: Despliegue Especial SWT (Mujer) -->
+                <div class="asset-card uniform-card" data-name="Despliegue Especial SWT (Mujer)">
+                    <div class="image-frame">
+                        <img class="asset-img" src="" alt="Despliegue Especial SWT (Mujer)" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span class="placeholder-text">[SWT Asalto - Mujer]</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">SWT Asalto (Mujer)</h3>
+                        <ul class="spec-list">
+                            <li class="spec-item"><span class="spec-label">Clase:</span><span class="spec-value">Special Weapon Team (F)</span></li>
+                            <li class="spec-item"><span class="spec-label">Insignia:</span><span class="spec-value">Parche de Unidad Interna</span></li>
+                            <li class="spec-item"><span class="spec-label">Uso:</span><span class="spec-value">Despliegue en Crisis Críticas</span></li>
+                            <li class="spec-item">
+                                <span class="spec-label">Código:</span>
+                                <span class="code-container">
+                                    <span class="uniform-code">LSSD-K9-SWT-04-M</span>
+                                    <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('LSSD-K9-SWT-04-M', this)">Copiar</button>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="asset-desc">Conjunto femenino oficial diseñado y propuesto para mantener una homogeneidad militar impecable y un perfil aerodinámico de combate en operaciones urbanas de la LSSD.</p>
+                    </div>
+                </div>
+
+                <div class="empty-state" id="empty-uniforms">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3>Activo no encontrado</h3>
+                    <p>No hay uniformes registrados con ese criterio de búsqueda.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE MODIFICACIONES DE VEHÍCULO (SÓLO IMAGEN CON SOPORTE URL + TÍTULO) -->
+        <div id="modificaciones" class="tab-section">
+            <div class="assets-grid" id="modifications-grid">
+
+                <!-- Modificación 1 -->
+                <div class="asset-card modification-card" data-name="Jaula de Aluminio Reforzada">
+                    <div class="image-frame">
+                        <!-- Imagen con soporte de carga remota (colocar URL en el src) -->
+                        <img class="asset-img" src="" alt="Jaula de Aluminio Reforzada" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            <span class="placeholder-text">Acondicionamiento Interior</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Jaula Reforzada K-9</h3>
+                    </div>
+                </div>
+
+                <!-- Modificación 2 -->
+                <div class="asset-card modification-card" data-name="Sistema Dual Heat Alarm">
+                    <div class="image-frame">
+                        <!-- Imagen con soporte de carga remota -->
+                        <img class="asset-img" src="" alt="Sistema Dual Heat Alarm" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span class="placeholder-text">Seguridad Activa</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Sistema Dual Heat Alarm</h3>
+                    </div>
+                </div>
+
+                <!-- Modificación 3 -->
+                <div class="asset-card modification-card" data-name="Mecanismo Remoto Door Popper">
+                    <div class="image-frame">
+                        <!-- Imagen con soporte de carga remota -->
+                        <img class="asset-img" src="" alt="Mecanismo Remoto Door Popper" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                            <span class="placeholder-text">Despliegue Táctico</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Mecanismo Door Popper</h3>
+                    </div>
+                </div>
+
+                <!-- Modificación 4 -->
+                <div class="asset-card modification-card" data-name="Suspensión de Servicio Pesado">
+                    <div class="image-frame">
+                        <!-- Imagen con soporte de carga remota -->
+                        <img class="asset-img" src="" alt="Suspensión de Servicio Pesado" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                            <span class="placeholder-text">Estabilidad Mecánica</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Suspensión de Servicio</h3>
+                    </div>
+                </div>
+
+                <!-- Modificación 5 -->
+                <div class="asset-card modification-card" data-name="Filtros de Aire HEPA Cabina">
+                    <div class="image-frame">
+                        <!-- Imagen con soporte de carga remota -->
+                        <img class="asset-img" src="" alt="Filtros de Aire HEPA Cabina" onerror="this.style.display='none'">
+                        <div class="placeholder-overlay">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                            <span class="placeholder-text">Protección Olfativa</span>
+                        </div>
+                    </div>
+                    <div class="info-container">
+                        <h3 class="asset-title">Filtros HEPA de Cabina</h3>
+                    </div>
+                </div>
+
+                <div class="empty-state" id="empty-modifications">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3>Activo no encontrado</h3>
+                    <p>No hay modificaciones registradas con ese criterio de búsqueda.</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- VISOR MODAL (OCULTO POR DEFECTO) -->
+    <div id="asset-modal" class="modal-overlay">
+        <div class="modal-card">
+            <!-- Botón de cierre -->
+            <button class="close-modal" onclick="closeAssetModal()" aria-label="Cerrar Ficha">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            
+            <!-- Panel izquierdo: Imagen -->
+            <div class="modal-image-pane" id="modal-image-pane">
+                <img id="modal-img" class="modal-img" src="" alt="Imagen del activo" style="display:none;">
+                <div class="placeholder-overlay" id="modal-placeholder">
+                    <!-- El SVG correspondiente se inyecta dinámicamente -->
+                </div>
+            </div>
+            
+            <!-- Panel derecho: Detalles Técnicos -->
+            <div class="modal-details">
+                <h2 id="modal-title" class="modal-title">Nombre del Activo</h2>
+                <ul id="modal-specs" class="modal-spec-list">
+                    <!-- Se inyecta dinámicamente -->
+                </ul>
+                <p id="modal-desc" class="modal-desc">Descripción del activo...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gestión Interactiva de la Intranet -->
+    <script>
+        // Al cargar la página, asignar eventos de click a cada tarjeta
+        document.addEventListener("DOMContentLoaded", () => {
+            setupCardClicks();
+        });
+
+        function setupCardClicks() {
+            const cards = document.querySelectorAll('.asset-card');
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    openAssetModal(card);
+                });
+            });
+        }
+
+        // Función segura de copiado al portapapeles con feedback visual temporal
+        function copyToClipboard(text, btnElement) {
+            // Detener apertura del modal
+            event.stopPropagation();
+            
+            // Copiar únicamente el código limpio, sin el prefijo del comando
+            const cleanCode = text;
+            
+            // Crear elemento temporal para copiado retrocompatible
+            const el = document.createElement('textarea');
+            el.value = cleanCode;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            
+            // Animación y respuesta del botón
+            const originalText = btnElement.innerHTML;
+            btnElement.innerHTML = '¡Copiado!';
+            btnElement.style.backgroundColor = '#10b981'; // Verde de éxito
+            btnElement.style.color = '#ffffff';
+            
+            setTimeout(() => {
+                btnElement.innerHTML = originalText;
+                btnElement.style.backgroundColor = '';
+                btnElement.style.color = '';
+            }, 1500);
+        }
+
+        function openAssetModal(cardElement) {
+            const modal = document.getElementById('asset-modal');
+            const modalImg = document.getElementById('modal-img');
+            const modalPlaceholder = document.getElementById('modal-placeholder');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSpecs = document.getElementById('modal-specs');
+            const modalDesc = document.getElementById('modal-desc');
+
+            // 1. Obtener la información de la tarjeta seleccionada de forma segura
+            const titleEl = cardElement.querySelector('.asset-title');
+            const descEl = cardElement.querySelector('.asset-desc');
+            const title = titleEl ? titleEl.textContent : 'Sin título';
+            const desc = descEl ? descEl.textContent : 'Ficha técnica para uso exclusivo de la unidad canina de la LSSD.';
+            
+            // Procesar Imagen
+            const cardImg = cardElement.querySelector('.asset-img');
+            const hasRealImage = cardImg && cardImg.src && !cardImg.src.endsWith('/') && cardImg.style.display !== 'none';
+            
+            if (hasRealImage) {
+                modalImg.src = cardImg.src;
+                modalImg.style.display = 'block';
+                modalPlaceholder.style.display = 'none';
+            } else {
+                modalImg.style.display = 'none';
+                modalPlaceholder.style.display = 'flex';
+                // Copiar el SVG interno del placeholder para mantener la coherencia
+                const cardSvg = cardElement.querySelector('.placeholder-overlay').innerHTML;
+                modalPlaceholder.innerHTML = cardSvg;
+            }
+
+            // 2. Cargar textos principales
+            modalTitle.textContent = title;
+            modalDesc.textContent = desc;
+
+            // 3. Procesar las especificaciones técnicas (Specs) de forma segura
+            modalSpecs.innerHTML = '';
+            const specs = cardElement.querySelectorAll('.spec-list .spec-item');
+            
+            if (specs && specs.length > 0) {
+                specs.forEach(spec => {
+                    const labelEl = spec.querySelector('.spec-label');
+                    const label = labelEl ? labelEl.textContent : 'Especificación:';
+                    
+                    // Si contiene un código de vestuario, obtener solo el código limpio
+                    let value = '';
+                    const codeSpan = spec.querySelector('.uniform-code');
+                    if (codeSpan) {
+                        value = codeSpan.textContent;
+                    } else {
+                        const valSpan = spec.querySelector('.spec-value');
+                        value = valSpan ? valSpan.textContent : '';
+                    }
+                    
+                    const li = document.createElement('li');
+                    li.className = 'modal-spec-item';
+                    li.innerHTML = `<span class="spec-label">${label}</span><span class="spec-value">${value}</span>`;
+                    modalSpecs.appendChild(li);
+                });
+            } else {
+                // Si la tarjeta no tiene specs (como la sección simplificada de modificaciones),
+                // añadimos un texto descriptivo por defecto en la ficha técnica
+                const li = document.createElement('li');
+                li.className = 'modal-spec-item';
+                li.innerHTML = `<span class="spec-label">Categoría:</span><span class="spec-value">Acondicionamiento Especial K-9</span>`;
+                modalSpecs.appendChild(li);
+                
+                const li2 = document.createElement('li');
+                li2.className = 'modal-spec-item';
+                li2.innerHTML = `<span class="spec-label">Estado:</span><span class="spec-value">Requisito Obligatorio</span>`;
+                modalSpecs.appendChild(li2);
+            }
+
+            // 4. Activar el Modal con transiciones suaves
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+        }
+
+        function closeAssetModal() {
+            const modal = document.getElementById('asset-modal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300); // Esperar que termine la transición css
+        }
+
+        // Cerrar modal al clickear fuera de la tarjeta
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('asset-modal');
+            if (e.target === modal) {
+                closeAssetModal();
+            }
+        });
+
+        // Función para alternar de pestaña (Vehículos / Uniformes / Modificaciones)
+        function switchTab(tabId, buttonElement) {
+            // Desactivar todas las pestañas
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Desactivar todos los botones
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Activar la pestaña y botón correspondientes
+            document.getElementById(tabId).classList.add('active');
+            buttonElement.classList.add('active');
+
+            // Cambiar textos de la cabecera dinámicamente
+            const title = document.getElementById('panel-title');
+            const subtitle = document.getElementById('panel-subtitle');
+            
+            if (tabId === 'parque-movil') {
+                title.textContent = "Parque Móvil Autorizado";
+                subtitle.textContent = "Registro técnico de vehículos policiales acondicionados para binomios K-9";
+            } else if (tabId === 'uniformes') {
+                title.textContent = "Registro de Uniformidades";
+                subtitle.textContent = "Catálogo de equipo táctico, adiestramiento y conjuntos de vestuario para importar en el juego";
+            } else {
+                title.textContent = "Acondicionamiento Técnico K-9";
+                subtitle.textContent = "Especificaciones obligatorias de taller para transformar unidades policiales en vehículos K-9 operativos";
+            }
+            
+            // Forzar una nueva búsqueda / filtrado de elementos en la pestaña seleccionada
+            document.getElementById('search-bar').value = '';
+            filterAssets();
+        }
+
+        // Filtro en tiempo real para el catálogo
+        function filterAssets() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const activeTab = document.querySelector('.tab-section.active');
+            const cards = activeTab.querySelectorAll('.asset-card');
+            const emptyState = activeTab.querySelector('.empty-state');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const assetName = card.getAttribute('data-name').toLowerCase();
+                if (assetName.includes(query)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Mostrar u ocultar mensaje de error de búsqueda si es necesario
+            if (visibleCount === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
